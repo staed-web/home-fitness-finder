@@ -85,7 +85,10 @@ function toggleCompare(id) {
 function renderCompareTable() {
     const tableBody = document.querySelector('#compareTable tbody');
     const headers = document.querySelectorAll('#comp1, #comp2, #comp3');
-    headers.forEach((h, i) => h.textContent = comparedProducts[i] ? products.find(p => p.id === comparedProducts[i]).name : 'Product ' + (i+1));
+    headers.forEach((h, i) => {
+        const prod = comparedProducts[i] ? products.find(p => p.id === comparedProducts[i]) : null;
+        h.textContent = prod ? prod.name : 'Product ' + (i+1);
+    });
 
     if (comparedProducts.length === 0) {
         tableBody.innerHTML = '<tr><td colspan="4">Select products to compare</td></tr>';
@@ -94,35 +97,68 @@ function renderCompareTable() {
 
     const features = ['Price', 'Rating', 'Category', 'Key Specs'];
     tableBody.innerHTML = features.map(feature => {
-        const row = `<tr><td>${feature}</td>`;
-        return comparedProducts.reduce((acc, id) => {
+        let row = `<tr><td>${feature}</td>`;
+        comparedProducts.forEach(id => {
             const p = products.find(prod => prod.id === id);
-            let cell = p ? (feature === 'Price' ? `$${p.price}` : feature === 'Rating' ? `⭐ ${p.rating}` : feature === 'Category' ? p.category : JSON.stringify(p.specs)) : '';
-            return acc + `<td>${cell}</td>`;
-        }, row) + '</tr>';
+            let cell = '';
+            if (p) {
+                if (feature === 'Price') cell = `$${p.price}`;
+                else if (feature === 'Rating') cell = `⭐ ${p.rating}`;
+                else if (feature === 'Category') cell = p.category;
+                else cell = Object.entries(p.specs).map(([k, v]) => `${k}: ${v}`).join(', ');
+            }
+            row += `<td>${cell}</td>`;
+        });
+        return row + '</tr>';
     }).join('');
 }
 
 // Modal
 function openModal(id) {
     const product = products.find(p => p.id === id);
+    if (!product) return;
     const modal = document.getElementById('modal');
     document.getElementById('modalBody').innerHTML = `
         <img src="${product.image}" alt="${product.name}" style="width:100%; border-radius:8px;">
         <h3>${product.name}</h3>
         <p>$${product.price} | ⭐ ${product.rating} | ${product.category}</p>
         <p>${product.desc}</p>
-        <ul><li>${Object.entries(product.specs).map(([k,v]) => `${k}: ${v}`).join('</li><li>')}</li></ul>
-        <a href="${product.affiliate}" target="_blank" class="buy-btn" style="display:block; background:#27ae60; color:white; padding:1rem; text-align:center; text-decoration:none; border-radius:4px;">Buy on Amazon</a>
+        <h4>Specs:</h4>
+        <ul>${Object.entries(product.specs).map(([k,v]) => `<li>${k}: ${v}</li>`).join('')}</ul>
+        <a href="${product.affiliate}" target="_blank" class="buy-btn" style="display:block; background:#27ae60; color:white; padding:1rem; text-align:center; text-decoration:none; border-radius:4px; margin-top:1rem;">Buy on Amazon</a>
     `;
     modal.style.display = 'block';
 }
 
-document.querySelector('.close').addEventListener('click', () => document.getElementById('modal').style.display = 'none');
-window.onclick = (e) => { if (e.target.id === 'modal') e.target.style.display = 'none'; };
+// Close Modal
+function closeModal() {
+    document.getElementById('modal').style.display = 'none';
+}
 
-// Init
+// Hamburger Menu Toggle
+function toggleHamburger() {
+    document.querySelector('.nav-menu').classList.toggle('active');
+}
+
+// Event Listeners
 document.addEventListener('DOMContentLoaded', () => {
     renderProducts(products);
     renderCompareTable();
+    
+    // Search on Enter
+    document.getElementById('searchInput').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') searchProducts();
+    });
+    
+    // Hamburger
+    document.querySelector('.hamburger').addEventListener('click', toggleHamburger);
+    
+    // Modal close
+    document.querySelector('.close').addEventListener('click', closeModal);
 });
+
+// Global close modal on outside click
+window.onclick = (e) => { 
+    const modal = document.getElementById('modal');
+    if (e.target === modal) closeModal(); 
+};
