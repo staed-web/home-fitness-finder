@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Fitness Gear Finder - Live 2025 Deals from Amazon & Flipkart</title>
+    <meta name="description" content="Real-time fitness gear search from Amazon & Flipkart. Filter, compare, buy.">
+    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="style.css">
+    <script defer src="script.js"></script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXX"></script>
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="nav-container">
+                <h1 class="logo">FitFinder Live</h1>
+                <ul class="nav-menu">
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#products">Products</a></li>
+                    <li><a href="#compare">Compare</a></li>
+                    <li><a href="#guides">Guides</a></li>
+                </ul>
+                <div class="hamburger">☰</div>
+            </div>
+        </nav>
+    </header>
+
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <h2>Live Fitness Gear Deals 2025</h2>
+            <p>Pulled fresh from Amazon & Flipkart. Filter & compare in real-time.</p>
+            <div class="search-bar">
+                <input type="text" id="searchInput" placeholder="e.g., treadmill">
+                <select id="sourceSelect">
+                    <option value="both">Both Sites</option>
+                    <option value="amazon">Amazon</option>
+                    <option value="flipkart">Flipkart</option>
+                </select>
+                <button onclick="fetchProducts()">Search</button>
+            </div>
+        </div>
+    </section>
+
+    <section class="testimonials"><!-- Same as before --></section>
+
+    <main class="container">
+        <aside class="filters">
+            <h3>Filters</h3>
+            <!-- Same filters + source -->
+            <div class="filter-group">
+                <label>Source:</label>
+                <select id="sourceFilter"><option value="both">Both</option><option value="amazon">Amazon</option><option value="flipkart">Flipkart</option></select>
+            </div>
+            <!-- Other filters unchanged -->
+            <button onclick="applyFilters()">Apply</button>
+            <button onclick="clearFilters()">Clear</button>
+        </aside>
+
+        <section id="products" class="products-grid">
+            <div class="loading">Loading live data...</div>
+        </section>
+
+        <nav class="pagination" id="pagination"><!-- Dynamic buttons --></nav>
+
+        <section id="compare" class="comparison"><!-- Same --></section>
+
+        <section id="guides" class="guides"><!-- Same --></section>
+    </main>
+
+    <footer><!-- Same --></footer>
+
+    <div id="modal" class="modal"><!-- Same --></div>
+</body>
+</html>
